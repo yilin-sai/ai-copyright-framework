@@ -1,0 +1,40 @@
+module CRM where
+
+template DatasetMeta with
+    id: Text
+    sourceUrl: Text
+    copyrightOwnerId: Text
+    licenseId: Text
+    modelList: [Text]
+    modelOwner: Party
+  where
+    signatory modelOwner
+
+    key (modelOwner, id) : (Party, Text)
+    maintainer key._1
+
+template License with
+    id: Text
+    scope: Text
+    copyrightOwnerId: Text
+    modelOwner: Party
+    -- validFrom: Time
+    typeId: Text
+    datasetList: [Text]
+  where
+    signatory modelOwner
+
+    key (modelOwner, id) : (Party, Text)
+    maintainer key._1
+
+template ModelMeta with
+    id: Text
+    modelOwner: Party
+    datasetList: [Text]
+    sourceModel: Optional Text
+    childModels: [Text]
+  where
+    signatory modelOwner
+
+    key (modelOwner, id) : (Party, Text)
+    maintainer key._1
