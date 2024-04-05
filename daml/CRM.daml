@@ -13,16 +13,35 @@ template DatasetMeta with
     key (modelOwner, id) : (Party, Text)
     maintainer key._1
 
-template License with
+template LicenseDraft with
     id: Text
     scope: Text
-    copyrightOwnerId: Text
+    copyrightOwner: Party
     modelOwner: Party
-    -- validFrom: Time
+    validFrom: Time
     typeId: Text
     datasetList: [Text]
   where
-    signatory modelOwner
+    signatory copyrightOwner
+
+    key (copyrightOwner, id) : (Party, Text)
+    maintainer key._1
+
+    choice Accept: ContractId License
+      controller modelOwner
+      do create License
+          with id; scope; copyrightOwner; modelOwner; validFrom; typeId; datasetList
+
+template License with
+    id: Text
+    scope: Text
+    copyrightOwner: Party
+    modelOwner: Party
+    validFrom: Time
+    typeId: Text
+    datasetList: [Text]
+  where
+    signatory copyrightOwner, modelOwner
 
     key (modelOwner, id) : (Party, Text)
     maintainer key._1
